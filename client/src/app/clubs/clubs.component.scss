@@ -3,7 +3,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    overflow-y: hidden;
 }
 .buttons
 {
@@ -11,6 +12,7 @@
     justify-content: center;
     width: 100%;
     height: 60px;
+    margin-bottom: 25px;
     
     div
     {
@@ -35,7 +37,41 @@
 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
     width: 100%;
-    height: 100vh;
+    height: 80vh;
     padding: 20px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.club{
+    display: flex;
+    color: white;
+    background-color: #3797a4;
+    padding: 10px;
+    div {
+        display:  flex;
+        flex-direction: column;
+        width: 40%;
+        height: 100%;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .imageContainer {
+        display: flex;
+        width: 60%;
+        margin-right: 10px;
+        img {
+            width: 100%;        
+        }
+    }
+    button {
+        width: 60%;
+        font-weight: bold;
+        height: 50px;
+        border: none;
+        background-color: white;
+        margin-top: auto;
+        margin-bottom: 10px;
+    }
 }

@@ -16,6 +16,11 @@ export class ClubsComponent implements OnInit {
       });
     });
   }
+
+  toggleFollow(clubID) {
+    alert(clubID);
+  }
+
   ngOnInit(): void {
     console.log(this.allClubs);
   }

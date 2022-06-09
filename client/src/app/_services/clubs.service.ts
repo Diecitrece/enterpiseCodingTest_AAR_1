@@ -4,23 +4,37 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Club } from '@app/_models/club';
 
+interface RawClub {
+  _id: string;
+  name: string;
+  text: string;
+  image: string;
+  created: Date;
+  __v;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ClubsService {
-  private RawClub;
+  allClubs: Club[];
   constructor(private router: Router, private http: HttpClient) {
-    this.RawClub = class {
-      _id: string;
-      name: string;
-      text: string;
-      image: string;
-      created: Date;
-      __v;
-    };
+    this.allClubs = [];
   }
 
   getAll() {
-    return this.http.get<Club[]>(`${environment.apiUrl}/clubs`);
+    this.http
+      .get<RawClub[]>(`${environment.apiUrl}/clubs`)
+      .subscribe((clubs) => {
+        clubs.map((club) => {
+          this.allClubs.push({
+            id: club._id,
+            name: club.name,
+            text: club.text,
+            image: club.image,
+          });
+        });
+      });
+    return this.allClubs;
   }
 }

@@ -8,20 +8,14 @@ import { Club } from '@app/_models/club';
   styleUrls: ['./clubs.component.scss'],
 })
 export class ClubsComponent implements OnInit {
-  allClubs: Club[] = [];
+  allClubs: Club[];
   constructor(private clubsService: ClubsService) {
-    this.clubsService.getAll().subscribe((clubs) => {
-      clubs.map((club) => {
-        this.allClubs.push(club);
-      });
-    });
+    this.allClubs = this.clubsService.getAll();
   }
 
   toggleFollow(clubID) {
     alert(clubID);
   }
 
-  ngOnInit(): void {
-    console.log(this.allClubs);
-  }
+  ngOnInit(): void {}
 }

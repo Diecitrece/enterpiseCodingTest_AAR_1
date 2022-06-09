@@ -1,0 +1,76 @@
+.contain_all
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 90vh;
+    box-sizing: border-box;
+}
+.buttons
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 60px;
+    margin-bottom: 25px;
+    
+    div
+    {
+        width: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px;
+        padding: 10px;
+        background-color: #3797a4;
+        color: white;
+        font-weight: bold;
+    }
+    div:hover
+    {
+        font-size: larger;
+        border: 2px solid #24636c;
+        cursor: pointer;
+    }
+}
+.clubs
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.club{
+    display: flex;
+    color: white;
+    background-color: #3797a4;
+    padding: 10px;
+    div {
+        display:  flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .imageContainer {
+        display: flex;
+        width: 60%;
+        margin-right: 10px;
+        img {
+            width: 100%;        
+        }
+    }
+    button {
+        width: 60%;
+        font-weight: bold;
+        height: 50px;
+        border: none;
+        background-color: white;
+        margin-top: auto;
+        margin-bottom: 10px;
+    }
+}

@@ -5,13 +5,13 @@ import { AccountService } from '@app/_services';
 
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent {
-    user: User;
+  user: User;
 
-    constructor(private accountService: AccountService) {
-        this.user = this.accountService.userValue;
-    }
+  constructor(private accountService: AccountService) {
+    this.user = this.accountService.userValue;
+  }
 
-    logout() {
-        this.accountService.logout();
-    }
+  logout() {
+    this.accountService.logout();
+  }
 }

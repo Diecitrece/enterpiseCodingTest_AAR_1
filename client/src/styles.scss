@@ -43,13 +43,13 @@ p {
 
 .content {
   display: flex;
-  margin: 82px auto 32px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  margin-top: 82px;
   padding: 0 16px;
-  max-width: 960px;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
-
   h1 {
       color: #16a596;
   }
@@ -101,6 +101,3 @@ p {
       width: 1920px;
   }
 }
-
-
-

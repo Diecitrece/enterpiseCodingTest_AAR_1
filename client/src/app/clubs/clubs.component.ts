@@ -33,11 +33,10 @@ export class ClubsComponent implements OnInit {
   }
 
   toggleFollow(clubID) {
-    // console.log(clubID);
-    // this.accountService.toggleFollow(clubID).subscribe((user) => {
-    //   this.followingClubsIDs = user.followedClubs;
-    // });
-    console.log(this.followingClubsIDs);
+    this.accountService.toggleFollow(clubID).subscribe((user) => {
+      this.followingClubsIDs = user.followedClubs;
+      console.log(this.followingClubsIDs);
+    });
   }
 
   ngOnInit(): void {}

@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { User } from '@app/_models';
+import { NgTemplateOutlet } from '@angular/common';
+import { timeStamp } from 'console';
 // import { ZipOperator } from 'rxjs/internal/observable/zip';
 
 class RawUser {
@@ -21,7 +23,7 @@ class RawUser {
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private rawUserSubject: BehaviorSubject<RawUser>;
-  private userSubject: BehaviorSubject<User>
+  private userSubject: BehaviorSubject<User>;
   public user: Observable<User>;
 
   constructor(private router: Router, private http: HttpClient) {
@@ -35,16 +37,21 @@ export class AccountService {
   }
 
   public get userValue(): User {
-    // return this.userSubject.value;
-    // Antes esto estaba así, pero typescript es tonto y
+    return this.userSubject.value;
+  }
+
+  public get functionalUserValue(): User {
+    // Con el userValue normal no puedes obtener valores como el id porque typescript es tonto y
     //no sabe que this.userSubject.value no corresponde
-    //a User, por tanto no deberían funcionar
-    //los métodos update() y delete(), entre otras cosas...
+    //al tipo User, por tanto no deberían funcionar
+    //los métodos update() y delete(), entre otras cosas, ya que por ejemplo si bien en el tipo  User
+    //existe el campo id, realmente el campo asignado sería _id
     //este "error" me ha provocado dudas, así que he comentado
     //los métodos que no se usaban, además de
-    //crear una nueva interfaz y duplicar userSubject para
-    //satisfacer todas las funciones de este servicio
+    //crear una nueva interfaz y duplicar userValue para
+    //satisfacer todas las funciones que estoy creando
     let rawUser = this.rawUserSubject.value;
+    if (!rawUser) return null;
     return {
       id: rawUser._id,
       username: rawUser.username,
@@ -55,7 +62,6 @@ export class AccountService {
       followedClubs: rawUser.followedClubs,
     };
   }
-
   login(username, password) {
     return this.http
       .post<User>(`${environment.apiUrl}/users/authenticate`, {
@@ -121,10 +127,10 @@ export class AccountService {
   //   }
 
   toggleFollow(idClub: string) {
-    // return `idClub: ${idClub}, idUser: ${this.userValue.id}`;
+    console.log(`idClub: ${idClub}, idUser: ${this.functionalUserValue.id}`);
     return this.http.post<RawUser>(`${environment.apiUrl}/users/followClub`, {
       idClub,
-      idUser: this.userValue.id,
+      idUser: this.functionalUserValue.id,
     });
   }
 }

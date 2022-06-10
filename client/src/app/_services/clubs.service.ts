@@ -17,24 +17,9 @@ interface RawClub {
   providedIn: 'root',
 })
 export class ClubsService {
-  allClubs: Club[];
-  constructor(private router: Router, private http: HttpClient) {
-    this.allClubs = [];
-  }
+  constructor(private router: Router, private http: HttpClient) {}
 
   getAll() {
-    this.http
-      .get<RawClub[]>(`${environment.apiUrl}/clubs`)
-      .subscribe((clubs) => {
-        clubs.map((club) => {
-          this.allClubs.push({
-            id: club._id,
-            name: club.name,
-            text: club.text,
-            image: club.image,
-          });
-        });
-      });
-    return this.allClubs;
+    return this.http.get<RawClub[]>(`${environment.apiUrl}/clubs`);
   }
 }

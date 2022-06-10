@@ -13,7 +13,8 @@
                 {{club.name}}<br>
                 <span *ngIf="club.text">{{club.text}}</span>
                 <span *ngIf="!club.text">There is no description for this club</span>
-                <br><button (click)="toggleFollow(club._id)">Follow</button>
+                <br>
+                <button (click)="toggleFollow(club.id)">Follow</button>
             </div>
 
         </div>

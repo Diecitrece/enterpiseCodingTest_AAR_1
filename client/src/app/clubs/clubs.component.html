@@ -14,7 +14,8 @@
                 <span *ngIf="club.text">{{club.text}}</span>
                 <span *ngIf="!club.text">There is no description for this club</span>
                 <br>
-                <button (click)="toggleFollow(club.id)">Follow</button>
+                <button *ngIf="!followingClubsIDs.includes(club.id)" (click)="toggleFollow(club.id)">Follow</button>
+                <button *ngIf="followingClubsIDs.includes(club.id)" (click)="toggleFollow(club.id)"><span style="color: red;">Following</span></button>
             </div>
 
         </div>

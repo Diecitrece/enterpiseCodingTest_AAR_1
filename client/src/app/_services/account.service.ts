@@ -6,9 +6,6 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { User } from '@app/_models';
-import { NgTemplateOutlet } from '@angular/common';
-import { timeStamp } from 'console';
-// import { ZipOperator } from 'rxjs/internal/observable/zip';
 
 class RawUser {
   _id: string;
@@ -41,7 +38,7 @@ export class AccountService {
   }
 
   public get functionalUserValue(): User {
-    // Con el userValue normal no puedes obtener valores como el id porque typescript es tonto y
+    //Con el userValue normal no puedes obtener valores como el id porque typescript es tonto y
     //no sabe que this.userSubject.value no corresponde
     //al tipo User, por tanto no deberían funcionar
     //los métodos update() y delete(), entre otras cosas, ya que por ejemplo si bien en el tipo  User
@@ -97,22 +94,22 @@ export class AccountService {
   //     return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
   //   }
 
-  //   update(id, params) {
-  //     return this.http.put(`${environment.apiUrl}/users/${id}`, params).pipe(
-  //       map((x) => {
-  //         // update stored user if the logged in user updated their own record
-  //         if (id == this.userValue.id) {
-  //           // update local storage
-  //           const user = { ...this.userValue, ...params };
-  //           localStorage.setItem('user', JSON.stringify(user));
+  // update(id, params) {
+  //   return this.http.put(`${environment.apiUrl}/users/${id}`, params).pipe(
+  //     map((x) => {
+  //       // update stored user if the logged in user updated their own record
+  //       if (id == this.userValue.id) {
+  //         // update local storage
+  //         const user = { ...this.userValue, ...params };
+  //         localStorage.setItem('user', JSON.stringify(user));
 
-  //           // publish updated user to subscribers
-  //           this.userSubject.next(user);
-  //         }
-  //         return x;
-  //       })
-  //     );
-  //   }
+  //         // publish updated user to subscribers
+  //         this.userSubject.next(user);
+  //       }
+  //       return x;
+  //     })
+  //   );
+  // }
 
   //   delete(id: string) {
   //     return this.http.delete(`${environment.apiUrl}/users/${id}`).pipe(
@@ -127,10 +124,14 @@ export class AccountService {
   //   }
 
   toggleFollow(idClub: string) {
-    console.log(`idClub: ${idClub}, idUser: ${this.functionalUserValue.id}`);
     return this.http.post<RawUser>(`${environment.apiUrl}/users/followClub`, {
       idClub,
       idUser: this.functionalUserValue.id,
     });
+  }
+  storeNewClubs(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
+    console.log(this.userSubject);
   }
 }

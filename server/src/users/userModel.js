@@ -24,6 +24,9 @@ var UserSchema = new Schema({
 		type: String,
 		default: ''
 	},
+	followedClubs: {
+		type: Array,
+	},
 	created: {
 		type: Date,
 		default: Date.now

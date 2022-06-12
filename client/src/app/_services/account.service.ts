@@ -19,15 +19,11 @@ class RawUser {
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  private rawUserSubject: BehaviorSubject<RawUser>;
   private userSubject: BehaviorSubject<User>;
   public user: Observable<User>;
 
   constructor(private router: Router, private http: HttpClient) {
     this.userSubject = new BehaviorSubject<User>(
-      JSON.parse(localStorage.getItem('user'))
-    );
-    this.rawUserSubject = new BehaviorSubject<RawUser>(
       JSON.parse(localStorage.getItem('user'))
     );
     this.user = this.userSubject.asObservable();
@@ -37,37 +33,35 @@ export class AccountService {
     return this.userSubject.value;
   }
 
-  public get functionalUserValue(): User {
-    //Con el userValue normal no puedes obtener valores como el id porque typescript es tonto y
-    //no sabe que this.userSubject.value no corresponde
-    //al tipo User, por tanto no deberían funcionar
-    //los métodos update() y delete(), entre otras cosas, ya que por ejemplo si bien en el tipo  User
-    //existe el campo id, realmente el campo asignado sería _id
-    //este "error" me ha provocado dudas, así que he comentado
-    //los métodos que no se usaban, además de
-    //crear una nueva interfaz y duplicar userValue para
-    //satisfacer todas las funciones que estoy creando
-    let rawUser = this.rawUserSubject.value;
-    if (!rawUser) return null;
+  rawUserToUser(rawUser: RawUser): User {
     return {
       id: rawUser._id,
       username: rawUser.username,
       password: rawUser.password,
       firstName: rawUser.displayName.split(' ')[0],
-      lastName: rawUser.displayName.split(' ')[1],
+      lastName: rawUser.displayName.split(' ')[1] || '',
       token: '',
       followedClubs: rawUser.followedClubs,
     };
   }
+
   login(username, password) {
     return this.http
-      .post<User>(`${environment.apiUrl}/users/authenticate`, {
+      .post<RawUser>(`${environment.apiUrl}/users/authenticate`, {
         username,
         password,
       })
       .pipe(
-        map((user) => {
+        map((rawUser) => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
+
+          //Con el tipo User normal no puedes obtener valores como el id porque typescript es "tonto" y
+          //no sabe que lo que devuelve la API del backend no corresponde
+          //al tipo User, por tanto asigna lo obtenido incluso si
+          //el objeto no corresponde al tipo.
+
+          let user = this.rawUserToUser(rawUser);
+          console.log('On login: ' + user);
           localStorage.setItem('user', JSON.stringify(user));
           this.userSubject.next(user);
           return user;
@@ -86,6 +80,25 @@ export class AccountService {
     return this.http.post(`${environment.apiUrl}/users/register`, user);
   }
 
+  refreshUser() {
+    this.http
+      .get<RawUser>(`${environment.apiUrl}/users/${this.userValue.id}`)
+      .subscribe((rawUser) => {
+        let user = this.rawUserToUser(rawUser);
+        localStorage.setItem('user', JSON.stringify(user));
+        this.userSubject.next(user);
+      });
+  }
+  toggleFollow(idClub: string) {
+    return this.http.post<RawUser>(`${environment.apiUrl}/users/followClub`, {
+      idClub,
+      idUser: this.userValue.id,
+    });
+  }
+  storeNewClubs(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
+  }
   //   getAll() {
   //     return this.http.get<User[]>(`${environment.apiUrl}/users`);
   //   }
@@ -122,16 +135,4 @@ export class AccountService {
   //       })
   //     );
   //   }
-
-  toggleFollow(idClub: string) {
-    return this.http.post<RawUser>(`${environment.apiUrl}/users/followClub`, {
-      idClub,
-      idUser: this.functionalUserValue.id,
-    });
-  }
-  storeNewClubs(user: User) {
-    localStorage.setItem('user', JSON.stringify(user));
-    this.userSubject.next(user);
-    console.log(this.userSubject);
-  }
 }

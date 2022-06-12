@@ -3,6 +3,7 @@ import { ClubsService } from '@app/_services/clubs.service';
 import { Club } from '@app/_models/club';
 import { AccountService } from '@app/_services';
 import { User } from '@app/_models';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'show_clubs',
@@ -11,6 +12,8 @@ import { User } from '@app/_models';
 })
 export class ClubsComponent implements OnInit {
   allClubs: Club[];
+  showedClubs: Club[];
+  currentFilter: number;
   followingClubsIDs: string[];
   user: User;
   constructor(
@@ -18,6 +21,8 @@ export class ClubsComponent implements OnInit {
     private accountService: AccountService
   ) {
     this.allClubs = [];
+    this.filter();
+    this.accountService.refreshUser();
     this.user = this.accountService.userValue;
     this.followingClubsIDs = this.user.followedClubs;
     this.clubsService.getAll().subscribe((clubs) => {
@@ -33,13 +38,30 @@ export class ClubsComponent implements OnInit {
   }
 
   toggleFollow(clubID) {
-  this.accountService.toggleFollow(clubID).subscribe((changedUser) => {
-    this.user.followedClubs = changedUser.followedClubs;
-    this.accountService.storeNewClubs(this.user);
-    // this.user = this.accountService.userValue;
-    this.followingClubsIDs = this.user.followedClubs;
-  });
+    this.accountService.toggleFollow(clubID).subscribe((changedUser) => {
+      let user = this.accountService.rawUserToUser(changedUser);
+      this.user.followedClubs = user.followedClubs;
+      this.accountService.storeNewClubs(this.user);
+      this.followingClubsIDs = this.user.followedClubs;
+      this.filter(this.currentFilter);
+    });
   }
-
+  filter(option: number = 0): void {
+    this.currentFilter = option;
+    if (!option) {
+      this.showedClubs = this.allClubs;
+      return;
+    }
+    if (option === 1) {
+      this.showedClubs = this.allClubs.filter((club) => {
+        return this.followingClubsIDs.includes(club.id);
+      });
+      return;
+    }
+    this.showedClubs = this.allClubs.filter((club) => {
+      return !this.followingClubsIDs.includes(club.id);
+    });
+    return;
+  }
   ngOnInit(): void {}
 }

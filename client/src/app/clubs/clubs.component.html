@@ -1,11 +1,11 @@
 <div class="contain_all">
     <div class="buttons">
-        <div>Following</div>
-        <div>All</div>
-        <div>Not following</div>
+        <div (click)="filter(1)">Following</div>
+        <div (click)="filter()">All</div>
+        <div (click)="filter(2)">Not following</div>
     </div>
     <div class="clubs">
-        <div class="club" *ngFor="let club of allClubs">
+        <div class="club" *ngFor="let club of showedClubs">
             <div class="imageContainer">
                 <img src={{club.image}}>
             </div>

@@ -3,7 +3,6 @@ import { ClubsService } from '@app/_services/clubs.service';
 import { Club } from '@app/_models/club';
 import { AccountService } from '@app/_services';
 import { User } from '@app/_models';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'show_clubs',
@@ -37,7 +36,7 @@ export class ClubsComponent implements OnInit {
     });
   }
 
-  toggleFollow(clubID) {
+  toggleFollow(clubID: string) {
     this.accountService.toggleFollow(clubID).subscribe((changedUser) => {
       let user = this.accountService.rawUserToUser(changedUser);
       this.user.followedClubs = user.followedClubs;
